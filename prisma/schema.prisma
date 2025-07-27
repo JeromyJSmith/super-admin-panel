@@ -1,0 +1,170 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Client {
+  id          String   @id @default(cuid())
+  name        String
+  email       String   @unique
+  phone       String?
+  company     String?
+  status      ClientStatus @default(ACTIVE)
+  tags        String   @default("[]") // JSON string of tags
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  documents   Document[]
+  chatSessions ChatSession[]
+  deals       Deal[]
+  contacts    Contact[]
+  
+  @@map("clients")
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  clientId  String
+  name      String
+  email     String
+  phone     String?
+  role      String?
+  isPrimary Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  @@map("contacts")
+}
+
+model Deal {
+  id          String     @id @default(cuid())
+  clientId    String
+  title       String
+  description String?
+  value       Float?
+  status      DealStatus @default(OPEN)
+  priority    Priority   @default(MEDIUM)
+  closeDate   DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  client      Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  @@map("deals")
+}
+
+model Document {
+  id          String       @id @default(cuid())
+  clientId    String
+  filename    String
+  originalName String
+  fileSize    Int
+  mimeType    String
+  filePath    String
+  description String?
+  tags        String       @default("[]") // JSON string of tags
+  uploadedBy  String       // User ID or name
+  status      DocumentStatus @default(ACTIVE)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  client      Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  @@map("documents")
+}
+
+model ChatSession {
+  id        String      @id @default(cuid())
+  clientId  String
+  title     String      @default("New Chat")
+  status    ChatStatus  @default(ACTIVE)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  
+  client    Client      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  messages  ChatMessage[]
+  
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id            String      @id @default(cuid())
+  chatSessionId String
+  content       String
+  role          MessageRole // USER, ASSISTANT, SYSTEM
+  metadata      String?     // JSON metadata (tokens, model used, etc.)
+  createdAt     DateTime    @default(now())
+  
+  chatSession   ChatSession @relation(fields: [chatSessionId], references: [id], onDelete: Cascade)
+  
+  @@map("chat_messages")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      UserRole @default(USER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("users")
+}
+
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+  PROSPECT
+  ARCHIVED
+}
+
+enum DealStatus {
+  OPEN
+  WON
+  LOST
+  ON_HOLD
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum DocumentStatus {
+  ACTIVE
+  ARCHIVED
+  DELETED
+}
+
+enum ChatStatus {
+  ACTIVE
+  ARCHIVED
+  DELETED
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  VIEWER
+}

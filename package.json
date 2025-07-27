@@ -9,6 +9,33 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.12.3"
+    "@astrojs/node": "^9.3.0",
+    "@astrojs/react": "^4.3.0",
+    "@headlessui/react": "^2.2.6",
+    "@linear/sdk": "^53.0.0",
+    "@prisma/client": "^6.12.0",
+    "@supabase/storage-js": "^2.10.2",
+    "@supabase/supabase-js": "^2.52.1",
+    "@tailwindcss/vite": "^4.1.11",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/multer": "^2.0.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@types/uuid": "^10.0.0",
+    "astro": "^5.12.3",
+    "axios": "^1.11.0",
+    "better-sqlite3": "^12.2.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.526.0",
+    "multer": "^2.0.2",
+    "openai": "^5.10.2",
+    "prisma": "^6.12.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-dropzone": "^14.3.8",
+    "sqlite3": "^5.1.7",
+    "tailwindcss": "^4.1.11",
+    "uuid": "^11.1.0"
   }
 }

@@ -1,0 +1,10 @@
+---
+// CRM page with comprehensive client management, AI chat, and document upload
+---
+import AdminLayout from '../layouts/AdminLayout.astro';
+import CRMDashboard from '../components/CRMDashboard';
+---
+
+<AdminLayout title="CRM - Super Admin Panel">
+  <CRMDashboard client:load />
+</AdminLayout>
